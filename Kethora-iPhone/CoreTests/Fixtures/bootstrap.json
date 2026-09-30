@@ -1,0 +1,278 @@
+{
+  "mode": "local",
+  "model": {
+    "provider": "NVIDIA",
+    "model": "",
+    "endpoint": "https://integrate.api.nvidia.com/v1/chat/completions",
+    "configured": false
+  },
+  "settings": {
+    "id": "profile",
+    "name": "Kethora",
+    "timezone": "UTC",
+    "appearance": "dark",
+    "notifications": true,
+    "training": false,
+    "model_consent": false,
+    "feed_instructions": "Focus on my goals, completed work, and things that need my attention. Keep it concise.",
+    "revision": 1,
+    "created_at": "2026-09-30T17:26:57.216Z",
+    "updated_at": "2026-09-30T17:26:57.217Z"
+  },
+  "threads": [
+    {
+      "title": "Main chat",
+      "kind": "main",
+      "id": "311164f4-895f-4810-b3d7-f265a03ce27d",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.218Z",
+      "updated_at": "2026-09-30T17:26:57.218Z"
+    }
+  ],
+  "tasks": [
+    {
+      "title": "Synthetic native decoder fixture",
+      "request": "Synthetic native decoder fixture",
+      "thread_id": "311164f4-895f-4810-b3d7-f265a03ce27d",
+      "state": "partial",
+      "mode": "local",
+      "model_id": null,
+      "source_ids": [],
+      "turns_used": 0,
+      "correction": null,
+      "limitations": [
+        "Local deterministic fixture; no model inference.",
+        "Factual support has not been independently evaluated.",
+        "No calendar or other external write was attempted."
+      ],
+      "wait": null,
+      "id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.297Z",
+      "updated_at": "2026-09-30T17:26:57.403Z",
+      "memory_refs": [],
+      "draft": null,
+      "artifact_id": "9ad96798-5b55-4871-975c-d046c1de5929"
+    }
+  ],
+  "messages": [
+    {
+      "thread_id": "311164f4-895f-4810-b3d7-f265a03ce27d",
+      "role": "user",
+      "content": "Synthetic native decoder fixture",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "id": "6e2e1301-e22c-484a-8fcd-70da69db68d2",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.297Z",
+      "updated_at": "2026-09-30T17:26:57.297Z"
+    },
+    {
+      "thread_id": "311164f4-895f-4810-b3d7-f265a03ce27d",
+      "role": "assistant",
+      "content": "I’m preparing a local preview. It will stay saved when you close this page. No AI provider or external service is being called.",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "id": "2c533c09-0ba3-44f1-b4d4-9ce7f73813ef",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.297Z",
+      "updated_at": "2026-09-30T17:26:57.297Z"
+    },
+    {
+      "thread_id": "311164f4-895f-4810-b3d7-f265a03ce27d",
+      "role": "assistant",
+      "content": "I saved “Synthetic native decoder fixture” to your Library. This is a local preview. Its factual claims still need review.",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "artifact_id": "9ad96798-5b55-4871-975c-d046c1de5929",
+      "id": "a34bbd3e-1009-4ffd-9538-ae7f98362c03",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.403Z",
+      "updated_at": "2026-09-30T17:26:57.403Z"
+    }
+  ],
+  "artifacts": [
+    {
+      "title": "Synthetic native decoder fixture",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "pdf_hash": "d543c302279f141088484745bc8c0fc93f911037adb37c166092b4f225aa4b8d",
+      "pdf_bytes": 6092,
+      "hash": "b02697f2fd696320dfe64f423f4359253f4d7ecf4dc09779b219909e63fb2ea4",
+      "version": 1,
+      "status": "unverified_draft",
+      "format": "markdown",
+      "source_ids": [],
+      "memory_refs": [],
+      "id": "9ad96798-5b55-4871-975c-d046c1de5929",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.403Z",
+      "updated_at": "2026-09-30T17:26:57.403Z"
+    }
+  ],
+  "goals": [
+    {
+      "title": "Native test goal",
+      "description": "",
+      "category": "Career",
+      "milestones": [
+        {
+          "id": "b852cc90-aa8a-4673-a1c9-63e3763b54fb",
+          "title": "Draft",
+          "done": false
+        },
+        {
+          "id": "32f58593-888b-4e81-a60e-e981c197e7dd",
+          "title": "Review",
+          "done": false
+        }
+      ],
+      "status": "active",
+      "id": "62b2ceae-b92f-48a2-99bc-576ca5eff66a",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.408Z",
+      "updated_at": "2026-09-30T17:26:57.408Z"
+    }
+  ],
+  "feed": [
+    {
+      "title": "Synthetic native decoder fixture",
+      "summary": "A new draft is ready to review. Open its sources and limitations before using it.",
+      "artifact_id": "9ad96798-5b55-4871-975c-d046c1de5929",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "status": "unverified_draft",
+      "instruction_revision": 1,
+      "source_ids": [],
+      "reaction": null,
+      "id": "cd950d92-a89e-4373-beaa-62d259b851c1",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.404Z",
+      "updated_at": "2026-09-30T17:26:57.404Z"
+    }
+  ],
+  "files": [
+    {
+      "title": "USER.md",
+      "content": "# About you\n\nNo personal details have been saved yet.",
+      "description": "Context you choose to share with your assistant.",
+      "folder": "memory",
+      "versions": [
+        {
+          "revision": 1,
+          "content": "# About you\n\nNo personal details have been saved yet.",
+          "created_at": "2026-09-30T17:26:57.218Z"
+        }
+      ],
+      "id": "119bc8a7-1608-4d51-ba48-dc7773557709",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.218Z",
+      "updated_at": "2026-09-30T17:26:57.218Z"
+    },
+    {
+      "title": "SOUL.md",
+      "content": "# Working style\n\nBe thoughtful, practical, and concise. State uncertainty clearly.",
+      "description": "Communication preferences, never executable policy.",
+      "folder": "memory",
+      "versions": [
+        {
+          "revision": 1,
+          "content": "# Working style\n\nBe thoughtful, practical, and concise. State uncertainty clearly.",
+          "created_at": "2026-09-30T17:26:57.218Z"
+        }
+      ],
+      "id": "905c6344-b860-472a-aee1-109a6ce5209c",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.218Z",
+      "updated_at": "2026-09-30T17:26:57.218Z"
+    },
+    {
+      "title": "MEMORY.md",
+      "content": "# Memory\n\nAdd preferences you want Kethora to use in future tasks.",
+      "description": "Editable context for future model calls. Changes do not rewrite past results.",
+      "folder": "memory",
+      "versions": [
+        {
+          "revision": 1,
+          "content": "# Memory\n\nAdd preferences you want Kethora to use in future tasks.",
+          "created_at": "2026-09-30T17:26:57.218Z"
+        }
+      ],
+      "id": "1dee809e-c869-484c-9164-f620d8e4e7b0",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.218Z",
+      "updated_at": "2026-09-30T17:26:57.218Z"
+    },
+    {
+      "title": "IDENTITY.md",
+      "content": "# Identity\n\nName: Kethora\nRole: Personal AI assistant\n\nBe clear about what is known and ask before consequential actions.",
+      "description": "Your assistant’s editable identity. This content does not grant permissions.",
+      "folder": "memory",
+      "versions": [
+        {
+          "revision": 1,
+          "content": "# Identity\n\nName: Kethora\nRole: Personal AI assistant\n\nBe clear about what is known and ask before consequential actions.",
+          "created_at": "2026-09-30T17:26:57.218Z"
+        }
+      ],
+      "id": "e98af0f6-3336-4662-a2bb-0d4366c23334",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.218Z",
+      "updated_at": "2026-09-30T17:26:57.218Z"
+    }
+  ],
+  "sources": [],
+  "inbox": [
+    {
+      "title": "Your draft is ready",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "read": false,
+      "id": "bd64c45b-15aa-4ab4-8d6f-a4de47a484b4",
+      "revision": 1,
+      "created_at": "2026-09-30T17:26:57.404Z",
+      "updated_at": "2026-09-30T17:26:57.404Z"
+    }
+  ],
+  "activity": [
+    {
+      "id": "eb67df4c-4e7f-444f-a654-5933df3db70a",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "type": "artifact.saved",
+      "detail": "Markdown v1 saved; SHA-256 b02697f2fd696320dfe64f423f4359253f4d7ecf4dc09779b219909e63fb2ea4. Draft only, not verified completion.",
+      "created_at": "2026-09-30T17:26:57.404Z",
+      "mode": "local",
+      "position": 5
+    },
+    {
+      "id": "3eaf2117-575b-4aba-8969-7f3acc338db5",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "type": "artifact.checking",
+      "detail": "Checking that the saved Markdown is nonempty and recording its content hash. Factual support is unverified.",
+      "created_at": "2026-09-30T17:26:57.300Z",
+      "mode": "local",
+      "position": 4
+    },
+    {
+      "id": "3d95b181-4fe0-44b8-9b94-bc45f31a9a0a",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "type": "task.running",
+      "detail": "Preparing a saved draft from the supplied material.",
+      "created_at": "2026-09-30T17:26:57.300Z",
+      "mode": "local",
+      "position": 3
+    },
+    {
+      "id": "d36406cc-9ef0-4902-8313-5117e53eb32c",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "type": "task.planning",
+      "detail": "Task admitted. Preparing scoped context.",
+      "created_at": "2026-09-30T17:26:57.300Z",
+      "mode": "local",
+      "position": 2
+    },
+    {
+      "id": "dc542972-f441-4e18-88f2-6b41e332011e",
+      "task_id": "425a7312-3fb2-4653-aa3e-fd55893b841d",
+      "type": "task.received",
+      "detail": "Request and task ID committed to the local SQLite store.",
+      "created_at": "2026-09-30T17:26:57.297Z",
+      "mode": "local",
+      "position": 1
+    }
+  ]
+}
