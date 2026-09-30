@@ -1,0 +1,1873 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kethora private API",
+    "version": "1.0.0-g0",
+    "description": "Contract inventory only. Runtime currently rejects every /v1 request with 503."
+  },
+  "servers": [
+    {
+      "url": "https://api.kethora.invalid",
+      "description": "Undeployed placeholder; replace with approved endpoint before accepting data"
+    }
+  ],
+  "security": [
+    {
+      "AccountSession": []
+    }
+  ],
+  "paths": {
+    "/v1/commands": {
+      "post": {
+        "operationId": "commitCommand",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Command"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/tasks": {
+      "get": {
+        "operationId": "listTasks",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}": {
+      "get": {
+        "operationId": "getTask",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/activity": {
+      "get": {
+        "operationId": "getActivity",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}/revise": {
+      "post": {
+        "operationId": "reviseTask",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRevision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/tasks/{id}/pause": {
+      "post": {
+        "operationId": "pauseTask",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRevision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/tasks/{id}/resume": {
+      "post": {
+        "operationId": "resumeTask",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRevision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/tasks/{id}/cancel": {
+      "post": {
+        "operationId": "cancelTask",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRevision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/approvals/{id}": {
+      "get": {
+        "operationId": "getTrustedApproval",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/approvals/{id}/decide": {
+      "post": {
+        "operationId": "decideTrustedApproval",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApprovalDecision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/approvals/{id}/rerequest": {
+      "post": {
+        "operationId": "rerequestApproval",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRevision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/artifacts": {
+      "get": {
+        "operationId": "listArtifacts",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/artifacts/{id}": {
+      "get": {
+        "operationId": "getArtifact",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/artifacts/{id}/versions/{version}/download": {
+      "get": {
+        "operationId": "getAuthorizedDownload",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/artifacts/stage": {
+      "post": {
+        "operationId": "stageArtifact",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArtifactStage"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/artifacts/commit": {
+      "post": {
+        "operationId": "commitArtifact",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ArtifactCommit"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/memory": {
+      "get": {
+        "operationId": "listMemory",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/memory/{id}": {
+      "put": {
+        "operationId": "editMemory",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemoryEdit"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/goals": {
+      "get": {
+        "operationId": "listGoals",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createGoal",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoalCreate"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/feed": {
+      "get": {
+        "operationId": "listEditions",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/ideas": {
+      "get": {
+        "operationId": "listIdeas",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/monitors": {
+      "post": {
+        "operationId": "createMonitor",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonitorCreate"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/monitors/{id}": {
+      "put": {
+        "operationId": "editMonitor",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MonitorCreate"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/connections": {
+      "get": {
+        "operationId": "listConnections",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      },
+      "post": {
+        "operationId": "connectCalendar",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionCreate"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/connections/{id}": {
+      "delete": {
+        "operationId": "disconnectCalendar",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/settings": {
+      "get": {
+        "operationId": "getSettings",
+        "x-build-status": "designed-only",
+        "responses": {
+          "200": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        }
+      }
+    },
+    "/v1/account/export": {
+      "post": {
+        "operationId": "beginExport",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRevision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/account/reset": {
+      "post": {
+        "operationId": "beginReset",
+        "x-build-status": "designed-only",
+        "responses": {
+          "202": {
+            "description": "Committed result only after corresponding gate passes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          },
+          "429": {
+            "description": "Rate limited",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error429"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature unavailable or dependency not ready"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRevision"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CSRF-Token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "AccountSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-kethora-session",
+        "description": "Secure HttpOnly SameSite cookie on trusted web host; iOS device refresh uses separate protected flow"
+      }
+    },
+    "schemas": {
+      "Command": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "command_id",
+          "kind",
+          "text",
+          "attachments"
+        ],
+        "properties": {
+          "command_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "enum": [
+              "create",
+              "revise",
+              "pause",
+              "resume",
+              "cancel",
+              "discussion"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "attachments": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "target_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "TaskContract": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schema_version",
+          "outcome",
+          "sources",
+          "acceptance",
+          "allowed_operations",
+          "cost_ceiling_usd",
+          "deadline_at",
+          "task_revision"
+        ],
+        "properties": {
+          "schema_version": {
+            "const": 1
+          },
+          "outcome": {
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object"
+            }
+          },
+          "acceptance": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "allowed_operations": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "public_source_read",
+                "artifact_create",
+                "calendar_event_create_after_approval"
+              ]
+            }
+          },
+          "cost_ceiling_usd": {
+            "type": "string",
+            "pattern": "^\\d+(\\.\\d{1,2})?$"
+          },
+          "deadline_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "task_revision": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "Waiting": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "reason",
+          "responsible_party",
+          "resume_condition",
+          "entered_at"
+        ],
+        "properties": {
+          "reason": {
+            "enum": [
+              "approval",
+              "input",
+              "authentication",
+              "provider",
+              "device",
+              "budget",
+              "capacity"
+            ]
+          },
+          "responsible_party": {
+            "enum": [
+              "user",
+              "provider",
+              "operator",
+              "system"
+            ]
+          },
+          "resume_condition": {
+            "type": "string"
+          },
+          "entered_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ApprovalDecision": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "decision",
+          "shown_digest",
+          "step_up_proof"
+        ],
+        "properties": {
+          "decision": {
+            "enum": [
+              "approve",
+              "deny"
+            ]
+          },
+          "shown_digest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "step_up_proof": {
+            "type": "string"
+          }
+        }
+      },
+      "TaskRevision": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expected_revision"
+        ],
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "Error429": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "operation",
+          "retry_after_seconds",
+          "limit_scope",
+          "request_id"
+        ],
+        "properties": {
+          "code": {
+            "const": "rate_limited"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "retry_after_seconds": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "limit_scope": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ArtifactStage": {
+        "type": "object",
+        "description": "G0 contract placeholder; must be frozen and typed before this endpoint is enabled",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "ArtifactCommit": {
+        "type": "object",
+        "description": "G0 contract placeholder; must be frozen and typed before this endpoint is enabled",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "MemoryEdit": {
+        "type": "object",
+        "description": "G0 contract placeholder; must be frozen and typed before this endpoint is enabled",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "GoalCreate": {
+        "type": "object",
+        "description": "G0 contract placeholder; must be frozen and typed before this endpoint is enabled",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "MonitorCreate": {
+        "type": "object",
+        "description": "G0 contract placeholder; must be frozen and typed before this endpoint is enabled",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "ConnectionCreate": {
+        "type": "object",
+        "description": "G0 contract placeholder; must be frozen and typed before this endpoint is enabled",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    }
+  }
+}
