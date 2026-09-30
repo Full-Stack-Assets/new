@@ -1,0 +1,531 @@
+The exact product definition
+
+Meta’s Muse is a persistent, personalized AI agent packaged as a consumer application. A person talks to it, delegates tasks and ongoing goals, connects the services it may use, and supervises consequential actions. The agent works from its own cloud computer, retains context, produces files and interactive tools, and continues working between conversations—even when the application is closed. This is a synthesis of Meta’s published product description, not a quotation. 
+
+The important distinction is:
+
+The chat is the interface. The enduring, permission-controlled worker behind it is the product.
+
+Muse is also distinct from Muse Spark, the model family. Meta offers Muse Spark 1.3 through its model API and Muse Code, but accessing the model does not provide the consumer application, its persistent environment, integrations, scheduling, memory, or security system. Those are separate product components. 
+
+For recreation, the right target is functional equivalence to the documented consumer experience, implemented with your own code and branding.
+
+I verified Meta’s official design article, help documentation, security description, and published interface images. I have not inspected its private source code or performed a signed-in, screen-by-screen app audit. Consequently, the documented behavior below is grounded in Meta’s publications; the implementation contracts and engineering choices are my proposed specification, not claims about undisclosed internals.
+
+⸻
+
+1. What the consumer application actually consists of
+
+Muse should be understood as one persistent assistant with several views into its work, rather than a collection of unrelated AI tools.
+
+A. Main chat and side chats
+
+Meta describes a continuing main conversation, with additional side chats for organizing topics. Users can send another message while the agent is working; they do not have to wait for a conventional alternating question-and-answer sequence. The assistant remains aware across the main conversation and side chats. 
+
+Recreation contract:
+
+The application opens into the main conversation. The message composer remains available while tasks run. A new message can start another task, clarify an existing task, change a requirement, or stop work.
+
+For example:
+
+“Compare three options for my trip.”
+“Separately, summarize this document.”
+“For the trip, exclude overnight flights.”
+
+The third message must modify the trip task—not the document task and not every future trip automatically.
+
+Internally, each task needs its own identity and working context. The conversation is where tasks are discussed, not where their entire execution state lives.
+
+Side chats organize work; do not present them as privacy-isolated workspaces unless you actually implement that separation.
+
+B. A customizable assistant identity
+
+Users can customize the assistant’s name, tone, communication style, avatar, and other identity details. These customizations persist. Muse also supports importing conversation history from another assistant through a ZIP upload. 
+
+Recreation contract:
+
+Store the assistant’s presentation separately from its permissions. Changing its personality must never change what it is authorized to do.
+
+A user should be able to say:
+
+“Call yourself Rowan. Be direct, avoid unnecessary updates, and explain important decisions.”
+
+That should update persistent preferences, with an interface for inspecting, editing, and reverting them.
+
+For imported history, show an import preview, identify unsupported formats, and distinguish historical statements from current preferences. An old conversation saying “send this email” must not become a new instruction to send it.
+
+C. Goals and things being tracked
+
+Muse has a Goals view for longer-running objectives and ongoing tracking. Its published interface separates tracked commitments from broader goals, with progress descriptions and item-level controls. 
+
+Recreation contract:
+
+Treat a goal, a task, and a monitor as different objects.
+
+Object	Meaning	Example
+Goal	An outcome pursued over time	Prepare for a move
+Task	A bounded piece of work	Compare moving companies
+Monitor	A condition checked repeatedly	Alert when a suitable apartment appears
+
+A goal contains its desired outcome, constraints, milestones, associated tasks, current blockers, and next action.
+
+Progress should be based on completed milestones or verified results—not invented percentages.
+
+Users should be able to adjust the goal through either its dedicated screen or the conversation, with both interfaces updating the same underlying record.
+
+D. Ideas
+
+Muse offers personalized suggestions based on goals, patterns, and previous interactions. These appear in an Ideas view and can also appear conversationally. 
+
+Recreation contract:
+
+An idea is a proposal, not an authorized task.
+
+Each suggestion should explain what it proposes, why it is relevant, what access it would need, and what accepting it would start.
+
+Accepting an idea creates a real task or goal. Dismissing it should reduce repeated suggestions of the same kind.
+
+This distinction prevents “proactive assistance” from becoming unsolicited action.
+
+E. Activity and upcoming work
+
+The assistant’s avatar provides access to its activity and permissions. Muse’s interface displays what it is currently doing, while the Upcoming view exposes scheduled tasks and reminders. 
+
+Recreation contract:
+
+The activity view should answer:
+
+What is running? What happened? What needs me? What happens next?
+
+A task detail page should show its request, current plan, actions attempted, results obtained, approvals, artifacts, and final outcome.
+
+The activity log is a record of observable actions and decisions. It should not depend on exposing a model’s private reasoning.
+
+Every running task needs a stop control. When stopping cannot undo an already completed external action, say exactly what has already happened.
+
+F. Library, files, and interactive artifacts
+
+Muse can create, read, edit, and summarize documents, spreadsheets, images, source files, and interactive web tools. Outputs are saved for later access rather than existing only as text inside a chat. Its documentation identifies formats including PDF, DOCX, Markdown, XLSX, CSV, and common image formats. 
+
+Recreation contract:
+
+An artifact is a first-class saved object with:
+
+* A stable identity, file type, owner, and version history.
+* Its originating task and relevant source material.
+* Preview, download, edit, and deletion controls.
+
+A request such as “update the spreadsheet you made yesterday” should modify or version the existing artifact, not silently create an unrelated replacement.
+
+Interactive dashboards and small applications need a separate execution boundary. Their code must not inherit the application’s login session, connector credentials, or administrative privileges.
+
+G. Memory and editable identity files
+
+Meta documents directly editable files named Memory.md, Soul.md, and Identity.md. These respectively cover remembered information, the assistant’s character and boundaries, and its identity details. They are accessible through the assistant’s Identity interface. 
+
+Recreation contract:
+
+Provide readable, editable memory—not merely an opaque vector database.
+
+For implementation, separate personal preferences, factual memories, project context, task state, and authorizations. They are not interchangeable.
+
+Every consequential memory should retain its source and update time. Corrections should supersede conflicting information.
+
+“Forget this” needs defined behavior across active memory and retrieval indexes. Deleting a chat, deleting a file, disconnecting a service, and resetting the assistant must remain distinct operations with explicit explanations.
+
+H. Connections and permissions
+
+Muse connects to external services through Connectors. Users can initiate connections conversationally or through Settings, disconnect them later, and configure whether the agent can retrieve information or perform actions. Some connectors can deliver events proactively. Muse also supports creating custom connectors. 
+
+Recreation contract:
+
+A connector is an adapter to an authorized service—not a promise that the agent can access any website.
+
+For each connection, expose the account involved, available actions, granted access, connection health, and revocation control.
+
+Disconnecting must block future access immediately. Previously imported information requires a separate retention or deletion decision.
+
+Custom connectors should have declared capabilities, destinations, required credentials, and tests before activation.
+
+⸻
+
+2. The behaviors that make it an agent rather than a chatbot
+
+Persistent work
+
+Meta says Muse can continue tasks after the app closes and can execute scheduled or event-driven work. Its design emphasizes notifying the user when results are meaningfully new or require input, rather than reporting every background step. 
+
+For recreation, background execution must exist on the server.
+
+A spinning indicator is not background execution. Neither is a timer in a browser tab.
+
+A durable task must survive the phone going offline, the user switching devices, an application refresh, and a worker restart. The application should reconnect to the same task when reopened.
+
+“Always available” also does not require continuously running model inference. Persist the task and wake a worker when there is useful work.
+
+Scheduling and monitoring
+
+Muse supports one-time and recurring reminders, custom intervals, and location-based reminders. Scheduled items can be inspected, changed, and cancelled; reminder timing uses the user’s timezone. 
+
+For recreation, store the schedule as an actual record containing the task, timezone, next execution, recurrence or trigger, notification rule, and cancellation state.
+
+Distinguish:
+
+“Send a summary every morning.”
+
+from:
+
+“Tell me only when something changes.”
+
+The first produces a scheduled delivery. The second evaluates a condition and may correctly produce no notification.
+
+Define behavior for missed runs, timezone changes, unavailable services, and exhausted usage allowance.
+
+Automatic use of skills
+
+Meta’s skills documentation describes built-in capabilities for activities such as research, image generation, document creation, podcasts, dashboards, and browsing. Muse selects relevant skills without requiring users to install them individually. 
+
+For recreation, define a skill as:
+
+Instructions for performing a task, supported tools, required permissions, expected outputs, and a method of checking the result.
+
+The user asks for an outcome. The application selects the capabilities.
+
+Do not require consumers to assemble a workflow graph before asking for an itinerary, document, or recurring report.
+
+Browser operation and human takeover
+
+Muse includes a browser that both the user and agent can control, with important actions subject to approval. Browser access defaults are configurable. 
+
+For recreation, provide a visible remote browser session with the current site, ownership of control, and task status.
+
+Use an explicit control rule:
+
+When the user takes control, the agent stops issuing browser actions until control is returned.
+
+Login entry should use a trusted credential interface, not ordinary chat messages. Unsupported websites, authentication challenges, and access restrictions should produce a clear handoff or blocker—not attempts to evade the restriction.
+
+Purchases and external commitments
+
+Muse’s payment documentation says purchases require approval. It supports Link by Stripe and, in suitable cases, existing payment methods on merchant accounts. Availability depends on the merchant, location, and checkout flow. 
+
+For recreation, the approval must describe the actual commitment: merchant or recipient, items or message, total amount and currency where applicable, account used, and relevant terms.
+
+A previous permission to browse a store must not authorize a purchase.
+
+Likewise, permission to draft an email must not authorize sending it.
+
+Meta’s published checkout screen includes merchant review, payment-method information, the estimated total, and separate allow/deny controls. 
+
+⸻
+
+3. The exact execution contract to implement
+
+The following is a proposed engineering specification, not Meta’s published internal state machine.
+
+Every request should follow this lifecycle:
+
+Receive → understand → establish scope → plan → execute authorized steps → verify → deliver or continue monitoring.
+
+The task must also support explicit waiting, pausing, failure, and cancellation states.
+
+Understand before acting
+
+Resolve the intended outcome and constraints. Ask only for missing information that materially changes execution.
+
+“Find an option” and “purchase an option” are different requests.
+
+Establish scope
+
+Before execution, associate the task with its permitted services, permitted actions, spending or usage limits, deadline, and stopping conditions.
+
+A model should not be able to expand this scope simply because it decides broader access would be helpful.
+
+Execute one accountable step at a time
+
+The agent proposes an action. A separate authority checks whether it is permitted. An executor performs it and records the observed result.
+
+That result—not the agent’s prediction—determines the next step.
+
+Parallel subtasks are acceptable, but they must inherit no more authority than the parent task and must not race to modify the same external resource.
+
+Wait without losing the task
+
+When approval, authentication, a service response, or a user decision is needed, persist the exact waiting state.
+
+The task should resume from that state after the condition is satisfied, not restart blindly.
+
+Verify the outcome
+
+Different outcomes require different evidence.
+
+A document needs an actual saved file that opens successfully. A sent email needs a service result identifying the message. A reservation needs confirmation from the booking system. A deployment needs a reachable release or equivalent verification.
+
+“The agent says it succeeded” is not a completion criterion.
+
+Handle uncertain side effects
+
+Suppose a purchase request times out after submission. The application may not know whether the merchant accepted it.
+
+Represent that as outcome uncertain, then reconcile against the merchant or payment provider.
+
+Do not automatically submit it again.
+
+Retries must distinguish safe reads, repeatable operations, and potentially duplicate external commitments.
+
+Finish honestly
+
+A final result should explain what was completed, provide evidence or artifacts, identify anything still unresolved, and state whether monitoring will continue.
+
+A partial result must remain partial.
+
+⸻
+
+4. The security model is part of the product
+
+Meta’s technical description provides unusually concrete details: a dedicated Linux VM; an agent runtime contained using systemd-nspawn; separate services for credentials, connector execution, safety checks, and authorization; and a Sentinel component governing connector actions and outbound network access. Its browser is brokered, with a restricted agent interface rather than unrestricted browser scripting. Credentials are substituted at controlled boundaries instead of exposed directly to the main agent. 
+
+The recreation principle is:
+
+Assume the working agent could be mistaken or manipulated. Its permissions must remain enforceable anyway.
+
+Separate the worker from the authority
+
+The component writing code, reading webpages, and processing files must not be able to edit its own permission database or disable security services.
+
+The policy service should make a decision on the concrete action, not accept a model-generated statement that “the user approved.”
+
+Make approval a real authorization object
+
+Muse documents approvals scoped to individual actions, tasks, websites, or connectors, alongside configurable default permission behavior. 
+
+For your implementation, bind each approval to the user, task, action, destination, relevant parameters, expiration, and policy version.
+
+Approval must become invalid when material details change.
+
+For example, approving one recipient and message does not authorize a different recipient or rewritten attachment. Approving an $80 purchase does not authorize $110.
+
+The approval interface must be rendered by trusted application code. An agent-generated webpage must never be able to impersonate it.
+
+Protect secrets and sessions
+
+Keep passwords, access tokens, payment credentials, and browser session material outside the agent-accessible workspace.
+
+Give executors references to authorized credentials rather than copying secrets into prompts or generated scripts.
+
+The same restrictions should apply to screenshots, logs, downloads, crash reports, and browser-control interfaces.
+
+Treat retrieved content as data
+
+A webpage, PDF, email, or repository file can contain instructions aimed at the agent. Your application should preserve its provenance and treat it as untrusted task material, not a source of new authority.
+
+Meta likewise describes protections that operate separately from the main model, rather than relying exclusively on the model recognizing malicious instructions. 
+
+Limit self-modification
+
+An agent may generate a helper script or improve a task-specific tool.
+
+That does not justify allowing it to rewrite authentication, permissions, billing, security policy, or the trusted execution layer.
+
+Generated tools should be versioned, tested, resource-limited, and reversible. A tool requesting a new external capability must go through authorization again.
+
+⸻
+
+5. The information the application must persist
+
+A recreation needs more than a messages table and an API key.
+
+This is the minimum proposed data model:
+
+Record	Information it must preserve
+User and assistant profile	Ownership, devices, timezone, identity, communication preferences
+Conversation	Messages, attachments, task associations, main/side-chat relationship
+Goal	Outcome, constraints, milestones, related tasks, progress evidence
+Task run	Request, plan, state, checkpoints, limits, blockers, result
+Schedule or trigger	Timing or event rule, next run, notification condition, cancellation
+Connection	Provider, account reference, scopes, health, credential reference
+Authorization	Exact permitted action, scope, expiry, approval history
+Memory	Content, source, confidence where relevant, revisions, deletion state
+Artifact	File or application, versions, permissions, provenance
+Execution receipt	Attempted action, policy decision, observed result, external reference
+Usage	Model/tool/compute consumption, allowance, budget holds, charges
+
+Every record must have an owner. Every operation must check ownership on the server.
+
+For concurrency, store task updates with revision checks. Otherwise, a background worker can overwrite a user’s newer instruction.
+
+For deletion, define which records disappear immediately, which are removed from backups on a documented schedule, and which minimal records must remain for security or transaction accounting. Do not make a “forget” button promise more than the implementation does.
+
+⸻
+
+6. A practical implementation approach
+
+I would build one coherent application backed by durable workers and isolated execution environments—not a static chat frontend with a collection of loosely connected automations.
+
+These are proposed choices, not claims about Meta’s stack.
+
+Consumer interface
+
+Use a shared application design for web and mobile, with the main conversation, goals, ideas, library, assistant activity, and settings all reading the same backend state.
+
+A React/TypeScript web application is a reasonable starting implementation choice. It should handle reconnecting streams, interrupted uploads, pending approvals, accessibility, and narrow mobile layouts.
+
+A web-first release is a reduced-surface starting point, not proof of complete native-app parity.
+
+Durable execution
+
+Use a workflow engine such as Temporal for long-running task coordination, waiting, timers, and recovery. Temporal documents execution history and replay as the mechanisms by which workflows resume after failures. Keep nondeterministic model calls and external actions in appropriately recorded activities. 
+
+The workflow system tracks execution. The model supplies task-specific interpretation and proposed steps. Do not ask the model to substitute for durable state management.
+
+Isolated computers
+
+For the closest environment-level match, allocate a persistent environment per user with controlled storage, processes, and network access.
+
+Firecracker is one possible implementation component for lightweight VM isolation; its production documentation recommends a single tenant per Firecracker process. It still requires proper host configuration and does not supply the whole security system for you. 
+
+Browser service
+
+Run Chromium through a broker exposing only the actions the agent requires. Playwright can help with browser automation and testing, but browser-context isolation should not be mistaken for the complete security boundary of your product. Its documentation describes contexts primarily as isolated browser sessions and test environments. 
+
+Keep privileged browser APIs and session storage inaccessible to arbitrary generated code.
+
+Model integration
+
+Use an interchangeable model adapter rather than hard-coding the entire application to one provider.
+
+Evaluate candidate models against your actual workflows: interrupted tasks, tool selection, artifact editing, constraint retention, and recovery from failed actions.
+
+Using the same model name does not establish equivalent product behavior.
+
+Payments
+
+Use an authorized agent-payment integration rather than collecting raw card details in your own assistant.
+
+Stripe documents a Link flow in which an agent submits a spend request, presents an approval destination to the customer, and receives a one-time payment credential after approval. Raising an approved amount requires approval again. 
+
+Operations and usage
+
+Implement per-task limits, per-user allowances, storage limits, and a visible usage meter. Pause safely when limits are reached.
+
+Meta currently documents free limited usage and paid Power and Maximum plans at $20 and $100 per month. Those prices are product-reference information—not evidence that your own operating costs will support identical packaging. 
+
+⸻
+
+7. Platform-specific features must remain explicit
+
+A complete product specification needs a coverage matrix. It should not quietly describe a web application as equivalent to every Muse client.
+
+Muse is offered across mobile, web, WhatsApp, and Mac surfaces. Its Mac documentation describes local-file and local-application access controlled through macOS permissions, including choices equivalent to disabled, read-only, and read-and-interact access. 
+
+For your recreation, record each capability separately:
+
+Surface	Required implementation decision
+Web	Chat, task supervision, files, approvals, remote browser
+iOS and Android	Notifications, attachments, voice input, sharing, location-trigger support where provided
+Messaging channel	Account linking, message delivery, task association, secure approval handoff
+Desktop companion	Local filesystem and application access, device availability, OS permissions
+External services	Provider authorization, supported actions, regional availability
+
+A cloud task can continue without the phone application open. A task dependent on a particular desktop’s local files must correctly report when that device is unavailable.
+
+Likewise, integrations Meta can provide through its own account ecosystem are not automatically available to an independent application. Its documentation describes automatic connections for certain Meta accounts in the same Accounts Center; recreating that requires your own permitted integration path, not merely copying a connection button. 
+
+⸻
+
+8. The build sequence that minimizes rework
+
+First: prove one real end-to-end task
+
+Implement account creation, persistent chat, a saved task, an isolated worker, one read-only connector, one generated artifact, and a completion receipt.
+
+Close the app during execution. Restart the worker. Confirm the task still finishes correctly.
+
+This proves the core product exists.
+
+Second: add controlled external actions
+
+Introduce trusted approval cards, scoped authorizations, revocation, and one carefully selected write operation.
+
+Test denial, expiration, changed parameters, and ambiguous outcomes before adding more connectors.
+
+Third: add continuity and proactive work
+
+Implement editable memory, side chats, goals, scheduling, event triggers, meaningful-change notifications, and cancellation.
+
+Ensure these features update shared task records rather than creating competing copies of state.
+
+Fourth: expand capability
+
+Add browser takeover, richer artifacts, custom tools, additional connectors, and payment integration.
+
+Each addition must pass the same authorization, isolation, evidence, and recovery requirements.
+
+Fifth: complete the consumer product
+
+Add native surfaces, onboarding polish, account recovery, usage controls, support tooling, backups, data controls, and operational monitoring.
+
+Do not label the product a complete recreation while these are only screenshots or placeholder settings.
+
+⸻
+
+9. The acceptance tests that define a genuine recreation
+
+These are proposed release gates. They are more useful than declaring “feature complete.”
+
+Test	Required observable result
+First use	A new user can create an assistant and finish a useful task without configuring a workflow
+Concurrent requests	Several tasks run without mixing their requirements or outputs
+Mid-task correction	A new instruction changes the intended task without restarting unrelated work
+App closed	Server-side work continues and the result is available on return
+Worker failure	Execution resumes from saved state without losing progress
+Approval denied	The action does not occur through another tool, retry, or browser route
+Approval details changed	Material changes require a fresh approval
+Uncertain transaction	The system reconciles the outcome instead of blindly repeating it
+Connector revoked	Running and future tasks lose access and display the resulting blocker
+Memory corrected	Future retrieval uses the correction rather than the superseded claim
+Artifact revised	The correct existing artifact is updated with traceable version history
+Monitoring	A condition produces a notification only when its rule is satisfied
+Browser takeover	Human and agent do not act simultaneously
+Malicious input	Retrieved instructions cannot expand permissions or reveal protected credentials
+Generated tool	New code cannot alter the trusted control layer
+Cross-user isolation	One user cannot retrieve another user’s files, sessions, tasks, or approvals
+Reset	Active work is cancelled and the advertised deletion behavior actually occurs
+
+Also measure task completion, false completion claims, intervention frequency, duplicate side effects, notification quality, and cost per verified outcome.
+
+An attractive interface can pass none of these tests.
+
+⸻
+
+10. What “entirely recreated” can—and cannot—establish
+
+There are three different claims:
+
+Interface equivalence means matching screens and interactions. Establishing it requires a versioned capture of the actual application, including onboarding, errors, empty states, permission dialogs, and differences between platforms.
+
+Behavioral equivalence means completing the same defined workflows under the same constraints. That requires a shared test suite and actual results.
+
+Implementation equivalence means matching the private code, policies, infrastructure, model behavior, and service arrangements. The public material reviewed here does not establish that.
+
+Privacy also needs careful labeling. Meta’s documentation describes Confidential VM as a future capability, and its technical explanation explicitly distinguishes the launch system’s operational access controls from cryptographically preventing Meta’s access. Do not advertise those as the same thing. 
+
+Meta also documents a configurable model-training data setting, enabled initially, and a reset operation that deletes the assistant’s information, files, and active tasks. Your version needs explicit, implemented policies rather than copied privacy language. 
+
+The instruction to hand to a builder
+
+Build an independently branded, persistent personal-agent application—not a chatbot demonstration.
+
+The user must be able to delegate work conversationally, interrupt it, leave the application, return on another device, inspect progress, approve consequential actions, and retrieve verified results.
+
+Implement durable task state, scoped authorization, isolated execution, protected credentials, editable memory, saved artifacts, scheduling, monitoring, and transparent activity records as real backend capabilities.
+
+Keep the worker separate from the authority that grants permissions. Treat generated code and retrieved content as untrusted. Never let the agent grant itself additional access.
+
+Record external outcomes and handle uncertain side effects without blindly retrying. Do not represent generated text as proof of completion.
+
+Maintain a versioned parity matrix identifying each documented Muse behavior, the corresponding implementation, its acceptance test, its supported platforms, and any remaining difference.
+
+Deliver source code, reproducible setup, configuration documentation, migrations, tests, deployment instructions, and evidence from the acceptance suite. Mark unavailable integrations and simulated behavior explicitly.
+
+The essential recreation target is a persistent worker whose activity the consumer can understand and control. Reproducing that requires the interface, execution, permissions, memory, integrations, and recovery behavior to work together—not merely look like Muse.
