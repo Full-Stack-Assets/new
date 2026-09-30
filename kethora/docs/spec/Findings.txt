@@ -1,0 +1,23 @@
+Headline findings: the Accounts Center sits on a blank white spinner for ~4 seconds, the referral-code screen is a dead end after redemption, your credentials store has no search across 27 logins, and the "improve our AI models" toggle defaults on. The permission sheets and Report-an-issue form are the standouts on the good side. 
+Here's what would actually move the needle:
+
+**Missing interactions**
+- The 5 unlabeled icons in the chat input bar — open each one and record what sheet/menu it opens.
+- Tapping a *connected* connector row (you showed the Browser one; the others may differ), the `+` and star icons in the credentials store.
+- The in-chat approval card flow — have the agent trigger one and record it. That's the app's signature UI and it's nowhere in the video.
+- Creating a side chat, creating a goal, tapping an idea card, opening an artifact and a media item from the Library.
+
+**Missing states**
+- Every screen's loading, empty, and error states. You caught two empty states; error/offline states (airplane mode walkthrough!) are unrecorded.
+- Long-press and swipe gestures anywhere they exist — message actions, chat list, credentials rows.
+- Push notification appearance and the Home Screen widget.
+
+**Design tokens**
+- Still screenshots of key screens so colors, type scale, corner radii, and spacing can be measured exactly. Video frames work in a pinch but stills are cleaner.
+- The full copy deck — every string in the app. Screenshots OCR'd give you this for free.
+
+**One honest boundary:** all of the above replicates the *client*. The agent backend, models, connectors, and sync infrastructure aren't visible from the UI and can't be spec'd from recordings. A replica built from this would be a pixel-faithful shell, not a working Muse.
+
+Also worth saying plainly: fine for a prototype or learning exercise, but shipping a lookalike under Meta's branding to an app store would be a trademark problem.
+
+Want me to turn this into a proper replication brief — screen inventory, component list, state matrix, and a shot list for the recordings still needed?
