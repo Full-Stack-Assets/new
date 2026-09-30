@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "environment": "local_development_edition_plus_infrastructure_fixtures",
+  "release_status": "not_released",
+  "source_types": {
+    "https_pages": "disabled",
+    "pdf_attachment": "disabled",
+    "text_attachment": "local_persisted",
+    "markdown_attachment": "local_persisted",
+    "csv_attachment": "local_persisted"
+  },
+  "calendar_classes": {
+    "google": "read_only_untested",
+    "microsoft": "read_only_untested",
+    "icloud": "read_only_untested",
+    "fastmail": "read_only_untested",
+    "nextcloud": "read_only_untested",
+    "baikal": "read_only_untested"
+  },
+  "platforms": {
+    "web": "working_local_edition_browser_tested",
+    "ios_18_plus": "native_source_project_uncompiled"
+  },
+  "model": {
+    "production_route": "disabled_pending_processor_evidence",
+    "nvidia_development_route": "optional_explicit_model_and_consent_fixture_tested",
+    "fixture_route": "explicitly_simulated"
+  },
+  "acting_agents": {
+    "vm_provider": "disabled"
+  },
+  "artifacts": {
+    "markdown": "local_saved_versioned_hashed",
+    "pdf": "local_tagged_draft_opened_not_pdfua_verified"
+  },
+  "parity_ref": "docs/coverage/local-parity.md"
+}
