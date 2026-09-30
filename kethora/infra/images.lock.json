@@ -1,0 +1,29 @@
+{
+  "verified_at_utc": "2026-09-30",
+  "architecture_target": "linux/amd64; verify selected platform digest at deploy",
+  "images": {
+    "node": {
+      "tag": "24.21.0-bookworm-slim",
+      "manifest": "docker.io/library/node@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6"
+    },
+    "postgres": {
+      "tag": "18.6",
+      "manifest": "docker.io/library/postgres@sha256:86c951e05bf56c93d95d397747fb8820ac76cc3bedb78f43abd83eedbe3666ae"
+    },
+    "temporal_dev_cli": {
+      "tag": "1.5.1",
+      "manifest": "docker.io/temporalio/temporal@sha256:4fc5d9fbaba3b72316a992b14e47d34546909f097fc3d7111aedb27d474c2457",
+      "platform": "linux/amd64",
+      "observed_server_version": "1.29.1"
+    },
+    "temporal_production": {
+      "tag": "1.30.6",
+      "manifest": "docker.io/temporalio/server@sha256:c8ade0075f9d9da43c206de2b255c80be49db384045bd1ff76bd58d0f408a314"
+    },
+    "s3_local": {
+      "tag": "4.47",
+      "manifest": "docker.io/chrislusf/seaweedfs@sha256:ce9e796f1fe6f06968f4c04bdaf8f678dad9c8acdfef3d244133d71bfa6bf882"
+    }
+  },
+  "note": "Local postgres, CLI, S3 and calendar images pulled and exercised on 2026-09-30. The supplied CLI 1.9.1 panicked and was replaced after local verification. Production server and VM image remain untested."
+}
