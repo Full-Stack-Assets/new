@@ -1,0 +1,12 @@
+node_modules/
+dist/
+apps/web/public/app.js
+*.log
+.env
+.DS_Store
+data/
+playwright-report/
+test-results/
+apps/ios/**/xcuserdata/
+apps/ios/.build/
+apps/ios/.swiftpm/
