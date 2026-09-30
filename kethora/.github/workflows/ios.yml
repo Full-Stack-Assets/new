@@ -1,0 +1,15 @@
+name: iOS build
+on:
+  push:
+    paths: ['apps/ios/**', '.github/workflows/ios.yml']
+  pull_request:
+    paths: ['apps/ios/**', '.github/workflows/ios.yml']
+jobs:
+  ios:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Portable model tests
+        run: swift test --package-path apps/ios
+      - name: iOS simulator SDK build
+        run: xcodebuild -project apps/ios/Kethora.xcodeproj -scheme Kethora -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
